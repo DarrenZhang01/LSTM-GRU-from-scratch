@@ -35,7 +35,7 @@ def check_download_weights(model, hidden_unit):
 
     for file in files:
         if not os.path.exists(os.getcwd() + weights_folder + file):
-            print 'Downloading', file
+            print('Downloading', file)
             url = url_prefix + weights_folder + file
             # urllib.urlretrieve(url, filename= os.getcwd() + weights_folder + file)
             r = requests.get(url)
@@ -71,7 +71,7 @@ def SGD(train, test, hidden_unit, model, alpha=learning_rate, isTrain=False, num
     sess.run(init)
 
     if not os.path.isdir(os.getcwd() + weights_folder):
-        print 'Missing folder made'
+        print('Missing folder made')
         os.makedirs(os.getcwd() + weights_folder)
 
     if isTrain:
@@ -84,14 +84,14 @@ def SGD(train, test, hidden_unit, model, alpha=learning_rate, isTrain=False, num
                 _, minibatch_cost, acc = sess.run([optimizer, cost, accuracy], feed_dict={rnn._inputs: minibatch_X, Y: minibatch_Y})
                 iter_cost += minibatch_cost*1.0 / num_minibatches
 
-            print "Iteration {iter_num}, Cost: {cost}, Accuracy: {accuracy}".format(iter_num=iteration, cost=iter_cost, accuracy=acc)
+            print("Iteration {iter_num}, Cost: {cost}, Accuracy: {accuracy}".format(iter_num=iteration, cost=iter_cost, accuracy=acc))
 
         # print ppretty(rnn)
         Train_accuracy = str(sess.run(accuracy, feed_dict={rnn._inputs: trainX, Y: trainY}))
         # Test_accuracy = str(sess.run(accuracy, feed_dict={rnn._inputs: testX, Y: testY}))
 
         save_path = saver.save(sess, "." + weights_folder + "model_" + model + "_" + str(hidden_unit) + ".ckpt")
-        print "Parameters have been trained and saved!"
+        print("Parameters have been trained and saved!")
         print("\rTrain Accuracy: %s" % (Train_accuracy))
 
     else:  # test mode
@@ -100,7 +100,7 @@ def SGD(train, test, hidden_unit, model, alpha=learning_rate, isTrain=False, num
 
         saver.restore(sess, "." + weights_folder + "model_" + model + "_" + str(hidden_unit) + ".ckpt")
         acc = sess.run(accuracy, feed_dict={rnn._inputs: testX, Y: testY})
-        print "Test Accuracy:"+"{:.3f}".format(acc)
+        print("Test Accuracy:"+"{:.3f}".format(acc))
 
     sess.close()
 
@@ -123,27 +123,27 @@ def main():
     model = 'lstm'  # lstm or gru
     args = parser.parse_args()
     if args.hidden_unit:
-        print "> hidden unit flag has set value", args.hidden_unit
+        print("> hidden unit flag has set value", args.hidden_unit)
         hidden_unit = args.hidden_unit
 
     if args.model:
-        print "> model flag has set value", args.model
+        print("> model flag has set value", args.model)
         model = args.model
 
     if args.train:
-        print "> Now Training"
+        print("> Now Training")
         isTrain_ = True
         if args.iter:
             num_iterations_ = args.iter
 
     elif args.test:
-        print "> Now Testing"
+        print("> Now Testing")
     else:
-        print "> Need to provide train / test flag!"
+        print("> Need to provide train / test flag!")
         exit(0)
 
-    print "> Running for", num_iterations_,"iterations"
-    print "> Hidden size unit", hidden_unit
+    print("> Running for", num_iterations_,"iterations")
+    print("> Hidden size unit", hidden_unit)
     SGD(train, test, isTrain=isTrain_, num_iterations=num_iterations_, hidden_unit=hidden_unit, model=model)
 
 
